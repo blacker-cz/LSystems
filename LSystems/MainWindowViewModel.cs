@@ -237,7 +237,7 @@ namespace LSystems
                         return "Starting position on axis Y must be between 0 and 360";
                     break;
                 case "StartAngle":
-                    if (StartX < 0 || StartX >= 360)
+                    if (StartAngle < 0 || StartAngle >= 360)
                         return "Starting angle must be between 0 and 359";
                     break;
                 case "Iterations":
