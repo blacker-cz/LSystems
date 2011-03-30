@@ -21,59 +21,64 @@ namespace LSystems
         private Renderer _renderer;
 
         /// <summary>
+        /// Model
+        /// </summary>
+        private SettingsModel _model;
+
+        /// <summary>
         /// Starting position on X axis
         /// </summary>
-        public int StartX { get; set; }
+        public int StartX { get { return _model.StartX; } set { _model.StartX = value; } }
 
         /// <summary>
         /// Starting position on Y axis
         /// </summary>
-        public int StartY { get; set; }
+        public int StartY { get { return _model.StartY; } set { _model.StartY = value; } }
 
         /// <summary>
         /// Starting angle
         /// </summary>
-        public float StartAngle { get; set; }
+        public float StartAngle { get { return _model.StartAngle; } set { _model.StartAngle = value; } }
 
         /// <summary>
         /// Axiom
         /// </summary>
-        public string Axiom { get; set; }
+        public string Axiom { get { return _model.Axiom; } set { _model.Axiom = value; } }
 
         /// <summary>
         /// Rules
         /// </summary>
-        public string Rules { get; set; }
+        public string Rules { get { return _model.Rules; } set { _model.Rules = value; } }
 
         /// <summary>
         /// Number of iterations
         /// </summary>
-        public uint Iterations { get; set; }
+        public uint Iterations { get { return _model.Iterations; } set { _model.Iterations = value; } }
 
         /// <summary>
         /// Degree used for turning left/right
         /// </summary>
-        public float Delta { get; set; }
+        public float Delta { get { return _model.Delta; } set { _model.Delta = value; } }
 
         /// <summary>
         /// Step size
         /// </summary>
-        public float StepSize { get; set; }
+        public float StepSize { get { return _model.StepSize; } set { _model.StepSize = value; } }
 
         /// <summary>
         /// Step size randomization
         /// </summary>
-        public float StepDelta { get; set; }
+        public float StepDelta { get { return _model.StepDelta; } set { _model.StepDelta = value; } }
 
         /// <summary>
         /// Step angle randomization
         /// </summary>
-        public float AngleDelta { get; set; }
+        public float AngleDelta { get { return _model.AngleDelta; } set { _model.AngleDelta = value; } }
 
         /// <summary>
         /// Randomization seed
         /// </summary>
-        public int Seed { get; set; }
+        public int Seed { get { return _model.Seed; } set { _model.Seed = value; } }
 
         /// <summary>
         /// Generated image
@@ -81,12 +86,29 @@ namespace LSystems
         public Image Image { get { return _renderer.Preview; } }
 
         /// <summary>
+        /// List of known colors
+        /// </summary>
+        public List<Color> Colors { get { return GetKnownColors(); } }
+
+        /// <summary>
+        /// Selected background color
+        /// </summary>
+        public Color SelectedBackgroundColor { get { return _model.SelectedBackgroundColor; } set { _model.SelectedBackgroundColor = value; } }
+
+        /// <summary>
+        /// Line width
+        /// </summary>
+        public float LineWidth { get { return _model.LineWidth; } set { _model.LineWidth = value; } }
+
+        /// <summary>
         /// Command handlers
         /// </summary>
         private BaseCommand _generateCommand,
             _saveImageCommand,
             _closeCommand,
-            _randomSeedCommand;
+            _randomSeedCommand,
+            _saveDefinitionCommand,
+            _loadDefinitionCommand;
 
         /// <summary>
         /// Generate L-System command binding
@@ -109,19 +131,22 @@ namespace LSystems
         public ICommand RandomSeedCommand { get { return _randomSeedCommand ?? (_randomSeedCommand = new RandomSeedCommand(this)); } }
 
         /// <summary>
+        /// Save definiton of current l-system command binding
+        /// </summary>
+        public ICommand SaveDefinitionCommand { get { return _saveDefinitionCommand ?? (_saveDefinitionCommand = new SaveDefinitionCommand(this)); } }
+
+        /// <summary>
+        /// Load definiton of l-system command binding
+        /// </summary>
+        public ICommand LoadDefinitionCommand { get { return _loadDefinitionCommand ?? (_loadDefinitionCommand = new LoadDefinitionCommand(this)); } }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainWindowViewModel()
         {
             _renderer = new Renderer();
-            _renderer.Clear(Color.White);
-            Axiom = "FX";
-            Rules = "X=X+YF\nY=FX-Y";
-            StartX = 100;
-            StartY = 100;
-            Iterations = 5;
-            Delta = 90.0f;
-            StepSize = 10.0f;
+            _model = new SettingsModel();
         }
 
         #region Command handlers implementation
@@ -158,11 +183,12 @@ namespace LSystems
                 (float)(Delta / 180 * Math.PI),
                 (AngleDelta / 100.0f),
                 (StepDelta / 100.0f),
-                Seed);
+                Seed,
+                new Pen(new SolidBrush(Color.Black), LineWidth));
 
             List<Backend.IDrawable> polylist = lsystem.Generate();
 
-            _renderer.Clear(Color.White);
+            _renderer.Clear(SelectedBackgroundColor);
             _renderer.Paint(polylist);
 
             // cleanup
@@ -217,53 +243,99 @@ namespace LSystems
             InvokePropertyChanged("StartY");
         }
 
+        /// <summary>
+        /// Save current configuration (definition of L-System) to file
+        /// </summary>
+        public void SaveDefinition()
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "l-system"; // Default file name
+            dlg.DefaultExt = ".ls"; // Default file extension
+            dlg.Filter = "L-System files(*.ls)|*.ls|All files (*.*)|*.*"; // Filter files by extension
+
+            // Show save file dialog box
+            bool? result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+                try
+                {
+                    System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(_model.GetType());
+                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filename))
+                    {
+                        x.Serialize(writer, _model);
+                        writer.Close();
+                    }
+                }
+                catch
+                {
+                    // todo: print message
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load L-System definition file
+        /// </summary>
+        public void LoadDefinition()
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".ls"; // Default file extension
+            dlg.Filter = "L-System files(*.ls)|*.ls|All files (*.*)|*.*"; // Filter files by extension
+
+            // Show save file dialog box
+            bool? result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+                try
+                {
+                    System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(_model.GetType());
+                    using (System.Xml.XmlReader reader = new System.Xml.XmlTextReader(filename))
+                    {
+                        if (x.CanDeserialize(reader))
+                            _model = x.Deserialize(reader) as SettingsModel;
+                        reader.Close();
+                    }
+                }
+                catch
+                {
+                    // todo: print message
+                }
+            }
+
+            // update all properties
+            InvokePropertyChanged(null);
+        }
+
         #endregion // Command handlers implementation
 
         /// <summary>
-        /// Validation of view fields
+        /// Get list of known colors
         /// </summary>
-        /// <param name="columnName">Column name</param>
-        /// <returns>Error message or null</returns>
-        protected string Validate(string columnName)
+        /// <returns></returns>
+        private List<Color> GetKnownColors()
         {
-            switch (columnName)
+            List<Color> colors = new List<Color>();
+            string[] color_names = Enum.GetNames(typeof(KnownColor));
+
+            foreach (string color_name in color_names)
             {
-                case "StartX":
-                    if (StartX < 0 || StartX > Renderer.PREVIEW_WIDTH)
-                        return "Starting position on axis X must be between 0 and 480";
-                    break;
-                case "StartY":
-                    if (StartY < 0 || StartY > Renderer.PREVIEW_HEIGHT)
-                        return "Starting position on axis Y must be between 0 and 360";
-                    break;
-                case "StartAngle":
-                    if (StartAngle < 0 || StartAngle >= 360)
-                        return "Starting angle must be between 0 and 359";
-                    break;
-                case "Iterations":
-                    if (Iterations < 1)
-                        return "Number of iterations must be greater then zero.";
-                    break;
-                case "StepSize":
-                    if (StepSize < 1)
-                        return "Step size must be greater then zero.";
-                    break;
-                case "StepDelta":
-                    if (StepDelta < -100 || StepDelta > 100)
-                        return "Step size randomization must be between -100 and 100.";
-                    break;
-                case "AngleDelta":
-                    if (AngleDelta < -100 || AngleDelta > 100)
-                        return "Turn angle randomization must be between -100 and 100.";
-                    break;
-                case "Delta":
-                    if (Delta < 0 || Delta >= 360)
-                        return "Turn angle must be between 0 and 359";
-                    break;
-                default:
-                    break;
+                KnownColor known_color = (KnownColor)Enum.Parse(typeof(KnownColor), color_name);
+
+                if ((known_color > KnownColor.Transparent) && (known_color < KnownColor.ButtonFace))
+                {
+                    colors.Add(Color.FromName(color_name));
+                }
             }
-            return null;
+
+            return (colors);
         }
 
         #region IDataErrorInfo implementation
@@ -274,7 +346,7 @@ namespace LSystems
         {
             get
             {
-                return Validate(columnName);
+                return _model.Validate(columnName);
             }
         }
 

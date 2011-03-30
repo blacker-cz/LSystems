@@ -86,4 +86,30 @@ namespace LSystems
             _viewModel.RandomizeSeed();
         }
     }
+
+    /// <summary>
+    /// Command handler for saving definition of l-system
+    /// </summary>
+    class SaveDefinitionCommand : BaseCommand
+    {
+        public SaveDefinitionCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
+
+        public override void Execute(object parameter)
+        {
+            _viewModel.SaveDefinition();
+        }
+    }
+
+    /// <summary>
+    /// Command handler for loading definition of l-system
+    /// </summary>
+    class LoadDefinitionCommand : BaseCommand
+    {
+        public LoadDefinitionCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
+
+        public override void Execute(object parameter)
+        {
+            _viewModel.LoadDefinition();
+        }
+    }
 }

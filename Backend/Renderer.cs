@@ -56,6 +56,9 @@ namespace LSystems.Backend
         {
             _bitmap = new Bitmap(WIDTH, HEIGHT, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             _preview = new Bitmap(PREVIEW_WIDTH, PREVIEW_HEIGHT, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            Clear(Color.White);
+
             _valid = false;
         }
 

@@ -3,6 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:src="clr-namespace:LSystems.Base"
         Title="L-Systems generator" Height="590" Width="700" ResizeMode="NoResize">
+    <src:ApplicationWindowBase.InputBindings>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding LoadDefinitionCommand}" />
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveDefinitionCommand}" />
+    </src:ApplicationWindowBase.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="489*" />
@@ -14,8 +18,8 @@
         </Grid.RowDefinitions>
         <Menu Name="mainMenu" VerticalAlignment="Top" IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open definition" IsEnabled="False" />
-                <MenuItem Header="_Save definition" IsEnabled="False" />
+                <MenuItem Header="_Open definition" Command="{Binding LoadDefinitionCommand}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="_Save definition" Command="{Binding SaveDefinitionCommand}" InputGestureText="Ctrl+S" />
                 <Separator />
                 <MenuItem Header="E_xit" Command="{Binding CloseCommand}" />
             </MenuItem>
@@ -71,8 +75,22 @@
                 </Button>
             </Grid>
         </GroupBox>
-        <!--<GroupBox Grid.Column="1" Grid.Row="1" Header="Look &amp; feel" Height="118" HorizontalAlignment="Left" Margin="3,26,0,0" Name="groupBox4" VerticalAlignment="Top" Width="174">
-            <Grid />
-        </GroupBox>-->
+        <GroupBox Grid.Column="1" Grid.Row="1" Header="Look &amp; feel" Height="118" HorizontalAlignment="Left" Margin="3,26,0,0" Name="groupBox4" VerticalAlignment="Top" Width="174">
+            <Grid>
+                <ComboBox Height="24" Name="cboColors" ItemsSource="{Binding Colors}" SelectedItem="{Binding SelectedBackgroundColor, Mode=TwoWay}" HorizontalAlignment="Left" Margin="17,56,0,0" Width="127" VerticalAlignment="Top">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Height="18" Margin="0,0,0,0">
+                                <Border BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="25" VerticalAlignment="Stretch" Background="{Binding Name}"/>
+                                <TextBlock Text="{Binding Name}" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Label Content="Background color:" HorizontalAlignment="Left" Margin="17,35,0,0" Name="label16" VerticalAlignment="Top" />
+                <Label Content="Line weight:" HorizontalAlignment="Left" Margin="17,10,0,0" Name="label17" VerticalAlignment="Top" />
+                <TextBox Height="23" HorizontalAlignment="Left" Margin="89,6,0,0" Name="textBox5" Text="{Binding LineWidth}" VerticalAlignment="Top" Width="55" />
+            </Grid>
+        </GroupBox>
     </Grid>
 </src:ApplicationWindowBase>

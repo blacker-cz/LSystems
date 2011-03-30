@@ -26,6 +26,8 @@ namespace LSystems.Backend
 
         private Random _random;
 
+        private Pen _pen;
+
         /// <summary>
         /// Constructor (overloaded)
         /// </summary>
@@ -47,7 +49,7 @@ namespace LSystems.Backend
         /// <param name="expandedGrammar">Expanded grammar string</param>
         /// <param name="startPoint">Starting point</param>
         public LSystem(string expandedGrammar, PointF startPoint, float startAngle = 0.0f, float step = 10.0f, float delta = ((float) Math.PI / 2),
-            float angleDelta = 0.0f, float stepDelta = 0.0f, int seed = 0)
+            float angleDelta = 0.0f, float stepDelta = 0.0f, int seed = 0, Pen pen = null)
         {
             _expandedGrammar = expandedGrammar;
             _startPoint = new PointF(startPoint.X, startPoint.Y);
@@ -57,6 +59,7 @@ namespace LSystems.Backend
             _angleDelta = angleDelta;
             _stepDelta = stepDelta;
             _random = new Random(seed);
+            _pen = pen ?? new Pen(Color.Black);
 
             _stateStack = new Stack<State>();
         }
@@ -67,7 +70,7 @@ namespace LSystems.Backend
         /// <param name="parser">Grammar parser instance</param>
         /// <param name="startPoint">Starting point</param>
         public LSystem(Parser parser, PointF startPoint, float startAngle = 0.0f, float step = 10.0f, float delta = ((float) Math.PI / 2),
-            float angleDelta = 0.0f, float stepDelta = 0.0f, int seed = 0)
+            float angleDelta = 0.0f, float stepDelta = 0.0f, int seed = 0, Pen pen = null)
         {
             _expandedGrammar = parser.Expand();
             _startPoint = new PointF(startPoint.X, startPoint.Y);
@@ -77,6 +80,7 @@ namespace LSystems.Backend
             _angleDelta = angleDelta;
             _stepDelta = stepDelta;
             _random = new Random(seed);
+            _pen = pen ?? new Pen(Color.Black);
 
             _stateStack = new Stack<State>();
         }
@@ -91,6 +95,7 @@ namespace LSystems.Backend
             Turtle turtle = new Turtle(_startPoint, _startAngle, _step, _delta, _angleDelta, _stepDelta);
             turtle.Randomizer = _random;
             Polyline polyline = new Polyline();
+            polyline.Pen = (Pen) _pen.Clone();
             polyline.Add(turtle.Position);
 
             for (int i = 0; i < _expandedGrammar.Length; i++)
