@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <StartX>82</StartX>
+  <StartY>42</StartY>
+  <StartAngle>0</StartAngle>
+  <Axiom>A</Axiom>
+  <Rules>A=B-A-B
+B=A+B+A</Rules>
+  <Iterations>6</Iterations>
+  <Delta>60</Delta>
+  <StepSize>18</StepSize>
+  <StepDelta>0</StepDelta>
+  <AngleDelta>0</AngleDelta>
+  <Seed>0</Seed>
+  <SelectedBackgroundColor>White</SelectedBackgroundColor>
+  <LineWidth>5</LineWidth>
+</SettingsModel>

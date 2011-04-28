@@ -102,18 +102,40 @@ namespace LSystems.Backend
             {
                 switch (_expandedGrammar[i])
                 {
-                    case 'F':       // draw forward
+                    case 'A':       // draw forward
+                    case 'B':
+                    case 'C':
+                    case 'D':
+                    case 'E':
+                    case 'F':
+                    case 'G':
+                    case 'H':
+                    case 'I':
+                    case 'J':
                         turtle.Forward();
                         polyline.Add(turtle.Position);
                         break;
-                    case 'B':       // draw backward
+                    case 'K':       // draw backward
+                    case 'L':
+                    case 'M':
+                    case 'N':
                         turtle.Backward();
                         polyline.Add(turtle.Position);
                         break;
-                    case 'G':       // move forward without drawing
+                    case 'a':       // move forward without drawing
+                    case 'b':
+                    case 'c':
+                    case 'd':
+                    case 'e':
+                    case 'f':
+                    case 'g':
+                    case 'h':
+                    case 'i':
+                    case 'j':
                         if(polyline.Points.Count > 1) // save polyline only if there is an actual line
                             polylines.Add(polyline);
                         polyline = new Polyline();  // start new polyline
+                        polyline.Pen = (Pen) _pen.Clone();
                         turtle.Forward();
                         polyline.Add(turtle.Position);
                         break;
@@ -122,6 +144,9 @@ namespace LSystems.Backend
                         break;
                     case '-':       // turn right
                         turtle.Right();
+                        break;
+                    case '|':       // turn around
+                        turtle.TurnAround();
                         break;
                     case '[':       // save state to stack
                         _stateStack.Push(new State((Turtle)turtle.Clone()));
@@ -132,6 +157,7 @@ namespace LSystems.Backend
                         if (polyline.Points.Count > 1)
                             polylines.Add(polyline);
                         polyline = new Polyline();
+                        polyline.Pen = (Pen) _pen.Clone();
                         polyline.Add(turtle.Position);
                         break;
                     default:

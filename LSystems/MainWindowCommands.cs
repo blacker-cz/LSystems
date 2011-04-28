@@ -112,4 +112,18 @@ namespace LSystems
             _viewModel.LoadDefinition();
         }
     }
+
+
+    /// <summary>
+    /// Command handler for loading example l-system
+    /// </summary>
+    class LoadExampleCommand : BaseCommand
+    {
+        public LoadExampleCommand(MainWindowViewModel viewModel, bool disabled = false) : base(viewModel, disabled) { }
+
+        public override void Execute(object parameter)
+        {
+            _viewModel.LoadExample(parameter as string);
+        }
+    }
 }

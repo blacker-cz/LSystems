@@ -108,7 +108,8 @@ namespace LSystems
             _closeCommand,
             _randomSeedCommand,
             _saveDefinitionCommand,
-            _loadDefinitionCommand;
+            _loadDefinitionCommand,
+            _loadExampleCommand;
 
         /// <summary>
         /// Generate L-System command binding
@@ -139,6 +140,11 @@ namespace LSystems
         /// Load definiton of l-system command binding
         /// </summary>
         public ICommand LoadDefinitionCommand { get { return _loadDefinitionCommand ?? (_loadDefinitionCommand = new LoadDefinitionCommand(this)); } }
+
+        /// <summary>
+        /// Load example of l-system command binding
+        /// </summary>
+        public ICommand LoadExampleCommand { get { return _loadExampleCommand ?? (_loadExampleCommand = new LoadExampleCommand(this)); } }
 
         /// <summary>
         /// Constructor
@@ -174,6 +180,7 @@ namespace LSystems
             catch (OutOfMemoryException)
             {
                 System.Windows.MessageBox.Show("Not enough memory, try decrease number of iterations.");
+                return;
             }
 
             Backend.LSystem lsystem = new Backend.LSystem(expandedGrammar,
@@ -272,7 +279,7 @@ namespace LSystems
                 }
                 catch
                 {
-                    // todo: print message
+                    System.Windows.MessageBox.Show("Couldn't save L-System, please try again later.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 }
             }
         }
@@ -292,7 +299,7 @@ namespace LSystems
             // Process save file dialog box results
             if (result == true)
             {
-                // Save document
+                // Load document
                 string filename = dlg.FileName;
                 try
                 {
@@ -306,12 +313,37 @@ namespace LSystems
                 }
                 catch
                 {
-                    // todo: print message
+                    System.Windows.MessageBox.Show("Couldn't load L-System, please try again later.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 }
             }
 
             // update all properties
             InvokePropertyChanged(null);
+        }
+
+        /// <summary>
+        /// Load embedded example
+        /// </summary>
+        /// <param name="name">Example file name</param>
+        public void LoadExample(string name)
+        {
+            try
+            {
+                System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(_model.GetType());
+                using (System.Xml.XmlReader reader = new System.Xml.XmlTextReader(System.Windows.Application.GetResourceStream(new System.Uri("/examples/" + name, UriKind.Relative)).Stream))
+                {
+                    if (x.CanDeserialize(reader))
+                        _model = x.Deserialize(reader) as SettingsModel;
+                    reader.Close();
+                }
+
+                // update all properties
+                InvokePropertyChanged(null);
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Couldn't load L-System, please try again later.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
         }
 
         #endregion // Command handlers implementation

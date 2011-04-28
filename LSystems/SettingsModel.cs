@@ -113,14 +113,14 @@ namespace LSystems
         {
             switch (columnName)
             {
-                case "StartX":
+/*                case "StartX":
                     if (StartX < 0 || StartX > Renderer.PREVIEW_WIDTH)
                         return "Starting position on axis X must be between 0 and 480";
                     break;
                 case "StartY":
                     if (StartY < 0 || StartY > Renderer.PREVIEW_HEIGHT)
                         return "Starting position on axis Y must be between 0 and 360";
-                    break;
+                    break;*/
                 case "StartAngle":
                     if (StartAngle < 0 || StartAngle >= 360)
                         return "Starting angle must be between 0 and 359";

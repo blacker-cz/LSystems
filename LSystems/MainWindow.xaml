@@ -23,7 +23,15 @@
                 <Separator />
                 <MenuItem Header="E_xit" Command="{Binding CloseCommand}" />
             </MenuItem>
-            <MenuItem Header="_L-Systems" />
+            <MenuItem Header="_L-Systems">
+                <MenuItem Header="Dragon curve" Command="{Binding LoadExampleCommand}" CommandParameter="dragon_curve.xml" />
+                <MenuItem Header="Islands and lakes" Command="{Binding LoadExampleCommand}" CommandParameter="islands_and_lakes.xml" />
+                <MenuItem Header="Fractal plant" Command="{Binding LoadExampleCommand}" CommandParameter="plant.xml" />
+                <MenuItem Header="Koch curve" Command="{Binding LoadExampleCommand}" CommandParameter="koch_curve.xml" />
+                <MenuItem Header="Tree" Command="{Binding LoadExampleCommand}" CommandParameter="tree.xml" />
+                <MenuItem Header="Gosper curve" Command="{Binding LoadExampleCommand}" CommandParameter="gosper.xml" />
+                <MenuItem Header="Sierpinski triangle" Command="{Binding LoadExampleCommand}" CommandParameter="sierpinski_triangle.xml" />
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_View help" IsEnabled="False" />
                 <MenuItem Header="_About" Click="MenuItem_Click" />

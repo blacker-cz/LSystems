@@ -129,6 +129,16 @@
       <SubType>Image</SubType>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="examples\dragon_curve.xml" />
+    <Resource Include="examples\gosper.xml" />
+    <Resource Include="examples\islands_and_lakes.xml" />
+    <Resource Include="examples\koch_curve.xml" />
+    <Resource Include="examples\plant.xml" />
+    <Resource Include="examples\sierpinski_triangle.xml" />
+    <Resource Include="examples\tree.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <StartX>12</StartX>
+  <StartY>71</StartY>
+  <StartAngle>12</StartAngle>
+  <Axiom>X</Axiom>
+  <Rules>X=F-[[X]+X]+F[+FX]-X
+F=FF</Rules>
+  <Iterations>6</Iterations>
+  <Delta>25</Delta>
+  <StepSize>9</StepSize>
+  <StepDelta>0</StepDelta>
+  <AngleDelta>0</AngleDelta>
+  <Seed>0</Seed>
+  <SelectedBackgroundColor>White</SelectedBackgroundColor>
+  <LineWidth>3</LineWidth>
+</SettingsModel>

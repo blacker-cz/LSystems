@@ -8,7 +8,6 @@ namespace LSystems.Backend
 {
     /// <summary>
     /// Class implementing turtle
-    /// todo: getters/setters
     /// </summary>
     class Turtle : ICloneable
     {
@@ -178,7 +177,7 @@ namespace LSystems.Backend
         /// </summary>
         public void TurnAround()
         {
-            // todo: implement this
+            _angle -= (float) Math.PI;
         }
 
         #region Implementation of ICloneable
